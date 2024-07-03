@@ -15,29 +15,27 @@ extends CharacterBody3D
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var vertical_rotation := 0.0
 
+func _enter_tree():
+	set_multiplayer_authority(str(name).to_int())
 
 func _unhandled_input(event):
+	if not is_multiplayer_authority(): return
+	
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * mouse_sensitivity))
 		vertical_rotation -= event.relative.y * mouse_sensitivity
 		vertical_rotation = clamp(vertical_rotation, -vertical_rotation_limit, vertical_rotation_limit)
 		camera.rotation_degrees.x = vertical_rotation
 		
-	_notification(event)
 		
 
-func _notification(what):
-	match what:
-		MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		MainLoop.NOTIFICATION_APPLICATION_FOCUS_IN:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	var vertical_rotation = camera
+	if not is_multiplayer_authority(): return
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	camera.current = true
 
 func _physics_process(delta):
+	if not is_multiplayer_authority(): return
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
