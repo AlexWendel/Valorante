@@ -1,8 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://dagtp7nku8ukg"]
+[gd_scene load_steps=6 format=3 uid="uid://dagtp7nku8ukg"]
 
 [ext_resource type="Texture2D" uid="uid://nadukv673lam" path="res://icon.svg" id="1_yx1d3"]
-[ext_resource type="Script" path="res://scripts/player.gd" id="2_5t4r5"]
-[ext_resource type="Script" path="res://scenes/Reticle.gd" id="3_mhlf8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fue6e"]
 albedo_texture = ExtResource("1_yx1d3")
@@ -17,9 +15,7 @@ size = Vector2(20, 20)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_papma"]
 data = PackedVector3Array(10, 0, 10, -10, 0, 10, 10, 0, -10, -10, 0, 10, -10, 0, -10, 10, 0, -10)
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_doru4"]
-
-[node name="Node3D" type="Node3D"]
+[node name="ascent" type="Node3D"]
 
 [node name="ground" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_fue6e")
@@ -29,55 +25,3 @@ mesh = SubResource("PlaneMesh_b4ega")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ground/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_papma")
-
-[node name="player" type="CharacterBody3D" parent="."]
-script = ExtResource("2_5t4r5")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.11201, 0)
-shape = SubResource("CapsuleShape3D_doru4")
-
-[node name="head" type="Node3D" parent="player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-
-[node name="Camera3D" type="Camera3D" parent="player/head"]
-
-[node name="UserInterface" type="Control" parent="player"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-
-[node name="Reticle" type="CenterContainer" parent="player/UserInterface"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("3_mhlf8")
-
-[node name="top" type="Line2D" parent="player/UserInterface/Reticle"]
-points = PackedVector2Array(0, -5, 0, -15)
-width = 2.0
-
-[node name="right" type="Line2D" parent="player/UserInterface/Reticle"]
-points = PackedVector2Array(5, 0, 15, 0)
-width = 2.0
-
-[node name="bottom" type="Line2D" parent="player/UserInterface/Reticle"]
-points = PackedVector2Array(0, 5, 0, 15)
-width = 2.0
-
-[node name="left" type="Line2D" parent="player/UserInterface/Reticle"]
-points = PackedVector2Array(-5, 0, -15, 0)
-width = 2.0
