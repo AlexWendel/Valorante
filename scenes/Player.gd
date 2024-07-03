@@ -1,6 +1,7 @@
 extends CharacterBody3D
 
 @onready var camera = $Camera3D
+@onready var raycast = $Camera3D/RayCast3D
 
 @export_category("Player Settings")
 @export var speed := 5.0
@@ -14,6 +15,7 @@ extends CharacterBody3D
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var vertical_rotation := 0.0
+var life = 150
 
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
@@ -26,7 +28,11 @@ func _unhandled_input(event):
 		vertical_rotation -= event.relative.y * mouse_sensitivity
 		vertical_rotation = clamp(vertical_rotation, -vertical_rotation_limit, vertical_rotation_limit)
 		camera.rotation_degrees.x = vertical_rotation
-		
+	
+	if Input.is_action_just_pressed("shoot"):
+		if raycast.is_colliding():
+			var hit_player = raycast.get_collider()
+			hit_player.receive_damage.rpc_id(hit_player.get_multiplayer_authority())
 		
 
 func _ready():
@@ -57,5 +63,13 @@ func _physics_process(delta):
 
 	move_and_slide()
 
-func shoot():
-	return
+
+	
+@rpc("any_peer")
+func receive_damage():
+	life -= 40
+	if life <= 0:
+		life  = 150
+		position = Vector3(0.0, 1.5, 0.0)
+		
+	
