@@ -23,7 +23,7 @@ func _on_host_button_pressed():
 	multiplayer.multiplayer_peer = enet_peer
 	
 	multiplayer.peer_connected.connect(add_player)
-	add_player(multiplayer.get_unique_id())
+	add_player(multiplayer.get_unique_id(), Global.mp_name)
 
 
 func _on_join_button_pressed():
@@ -32,10 +32,10 @@ func _on_join_button_pressed():
 	enet_peer.create_client(%AddressEntry.text, port)
 	multiplayer.multiplayer_peer = enet_peer
 	
-func add_player(peer_id):
+func add_player(peer_id, mp_name):
 	var player = Player.instantiate()
 	player.name = str(peer_id)
-	player.mp_name = Global.mp_name
+	player.mp_name = mp_name
 	add_child(player)
 
 func _on_nickname_change(new_text):
