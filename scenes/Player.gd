@@ -10,7 +10,12 @@ extends CharacterBody3D
 
 @export_category("Mouse Settings")
 @export var mouse_sensitivity := 0.2
-var mp_name:String = "Jogador"
+@export var nickname : String = Global.mp_name:
+	set (value):
+		$"SubViewport/Control/Name Label".text = value
+	get:
+		return nickname
+
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -19,8 +24,9 @@ var life = 150
 
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
-	$"SubViewport/Control/Name Label".text = mp_name
-
+	
+	
+	
 func _unhandled_input(event):
 	if not is_multiplayer_authority(): return
 	
@@ -37,9 +43,11 @@ func _unhandled_input(event):
 		
 
 func _ready():
+	
 	if not is_multiplayer_authority(): return
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera.current = true
+	
 
 func _physics_process(delta):
 	if not is_multiplayer_authority(): return
